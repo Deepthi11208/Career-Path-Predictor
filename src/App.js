@@ -157,27 +157,26 @@ Respond ONLY in this JSON format, no extra text, no markdown:
   ]
 }`;
 
-      const response = await fetch("/openai/v1/chat/completions", {
+      const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${process.env.REACT_APP_GROQ_API_KEY}`
         },
         body: JSON.stringify({
-          model: "llama-3.1-8b-instant",
+          model: "llama-3.3-70b-versatile",
           messages: [{ role: "user", content: prompt }],
           temperature: 0.7
         })
       });
 
       const data = await response.json();
-console.log("Full response:", JSON.stringify(data));
-const text = data.choices[0].message.content;
-console.log("Text:", text);
-const clean = text.replace(/```json|```/g, "").trim();
-const parsed = JSON.parse(clean);
-setResults(parsed.careers);
-setPage("results");
+      console.log("API Response:", JSON.stringify(data));
+      const text = data.choices[0].message.content;
+      const clean = text.replace(/```json|```/g, "").trim();
+      const parsed = JSON.parse(clean);
+      setResults(parsed.careers);
+      setPage("results");
     } catch (err) {
       console.error("Error:", err);
       setPage("error");
